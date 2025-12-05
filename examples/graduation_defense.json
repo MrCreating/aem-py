@@ -85,6 +85,7 @@
         "criteria",
         "alternatives_by_criterion"
       ],
+      "initial_mode": "first_expert",
       "max_iterations": 100
     }
   },

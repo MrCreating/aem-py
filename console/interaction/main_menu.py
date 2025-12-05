@@ -38,7 +38,7 @@ class MainMenu:
     @staticmethod
     def _print_header() -> None:
         print("=" * 60)
-        print("  AHP / AEM-COM консольный интерфейс")
+        print("  AHP / AEM-COM")
         print("=" * 60)
 
     def _print_status(self) -> None:

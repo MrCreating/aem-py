@@ -53,7 +53,6 @@ class MatrixPrinter:
 
         if title:
             lines.append(title)
-            lines.append("")
 
         if self._use_ascii_borders:
             header_border = self._build_horizontal_border(col_widths)
