@@ -36,6 +36,8 @@ class AemCom:
         self._max_iterations = max_iterations if max_iterations is not None else settings.max_iterations
         self._initial_mode = getattr(settings, "initial_mode", "aij")
 
+        self._strict_decrease = getattr(settings, "strict_decrease", False)
+
     def run_on_criteria_level(self) -> CriteriaLevelAemComResult:
         group_model = self._context.group_model
         matrices = group_model.pairwise_matrices.criteria_level
@@ -175,11 +177,11 @@ class AemCom:
         return aij
 
     def _run_aem_com(
-            self,
-            family_matrices: List[List[List[float]]],
-            expert_weights: List[float],
-            items: List[str],
-            initial_P: List[List[float]],
+        self,
+        family_matrices: List[List[List[float]]],
+        expert_weights: List[float],
+        items: List[str],
+        initial_P: List[List[float]],
     ) -> AemComRunResult:
         n = len(items)
         history: List[AemComIterationRecord] = []
@@ -221,8 +223,6 @@ class AemCom:
         iterations = 0
 
         while J and iterations < self._max_iterations:
-            iterations += 1
-
             q_values: Dict[Tuple[int, int], float] = {}
             log_q_values: Dict[Tuple[int, int], float] = {}
 
@@ -298,8 +298,17 @@ class AemCom:
                 if not ((i == r_star and j == s_star) or (i == s_star and j == r_star))
             ]
 
-            v = self._math.compute_priority_vector(P)
-            gcompi_current = self._gcompi.gcompi_family(family_matrices, expert_weights, v)
+            v_new = self._math.compute_priority_vector(P)
+            gcompi_new = self._gcompi.gcompi_family(family_matrices, expert_weights, v_new)
+
+            if self._strict_decrease and gcompi_new >= gcompi_current:
+                P[r][s] = old_val
+                P[s][r] = 1.0 / old_val
+                break
+
+            iterations += 1
+            v = v_new
+            gcompi_current = gcompi_new
 
             pair_items = (items[r], items[s])
             history.append(

@@ -58,6 +58,7 @@
   "settings": {
     "ahp_scale": "saaty_1_9",
     "aem_com": {
+      "strict_decrease": true,
       "permissibility": 0.3,
       "apply_to": [
         "criteria",

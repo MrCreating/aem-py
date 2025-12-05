@@ -94,6 +94,7 @@ class GroupBuilder:
             apply_to=list(aem_com_data.get("apply_to", [])),
             max_iterations=int(aem_com_data.get("max_iterations", 0)),
             initial_mode=str(aem_com_data.get("initial_mode", "aij")),
+            strict_decrease=bool(aem_com_data.get("strict_decrease", False)),
         )
 
         return Settings(
