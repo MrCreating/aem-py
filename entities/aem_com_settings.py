@@ -1,10 +1,11 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 
 @dataclass
 class AemComSettings:
-    permissibility: float
-    apply_to: List[str]
-    max_iterations: int
+    permissibility: float = 0.15
+    apply_to: List[str] = field(default_factory=lambda: ["criteria", "alternatives_by_criterion"])
+    max_iterations: int = 100
+    initial_mode: str = "aij"

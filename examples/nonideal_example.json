@@ -1,0 +1,154 @@
+{
+  "problem": {
+    "id": "nonideal_criteria_case",
+    "name": "Пример: неидеальный консенсус по критериям",
+    "description": "Демонстрация работы AEM-COM на уровне критериев",
+    "goal": "Выбрать лучший вариант при разных критериях"
+  },
+  "experts": [
+    {
+      "id": "e1",
+      "name": "Эксперт 1",
+      "role": "Оптимистичный эксперт",
+      "weight": 0.5
+    },
+    {
+      "id": "e2",
+      "name": "Эксперт 2",
+      "role": "Пессимистичный эксперт",
+      "weight": 0.5
+    }
+  ],
+  "model": {
+    "criteria": [
+      {
+        "id": "C1",
+        "name": "Стоимость",
+        "description": "Насколько дешёв вариант"
+      },
+      {
+        "id": "C2",
+        "name": "Качество",
+        "description": "Общее качество варианта"
+      },
+      {
+        "id": "C3",
+        "name": "Сроки",
+        "description": "Скорость реализации"
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "A1",
+        "name": "Вариант 1",
+        "description": ""
+      },
+      {
+        "id": "A2",
+        "name": "Вариант 2",
+        "description": ""
+      },
+      {
+        "id": "A3",
+        "name": "Вариант 3",
+        "description": ""
+      }
+    ]
+  },
+  "settings": {
+    "ahp_scale": "saaty_1_9",
+    "aem_com": {
+      "permissibility": 0.3,
+      "apply_to": [
+        "criteria",
+        "alternatives_by_criterion"
+      ],
+      "max_iterations": 50,
+      "initial_mode": "first_expert"
+    }
+  },
+  "pairwise_matrices": {
+    "criteria_level": [
+      {
+        "expert_id": "e1",
+        "items": ["C1", "C2", "C3"],
+        "matrix": [
+          [1.0, 3.0, 5.0],
+          [0.3333, 1.0, 2.0],
+          [0.2, 0.5, 1.0]
+        ]
+      },
+      {
+        "expert_id": "e2",
+        "items": ["C1", "C2", "C3"],
+        "matrix": [
+          [1.0, 0.2, 0.1429],
+          [5.0, 1.0, 0.3333],
+          [7.0, 3.0, 1.0]
+        ]
+      }
+    ],
+    "alternative_level": [
+      {
+        "criterion_id": "C1",
+        "expert_id": "e1",
+        "items": ["A1", "A2", "A3"],
+        "matrix": [
+          [1.0, 2.0, 3.0],
+          [0.5, 1.0, 2.0],
+          [0.3333, 0.5, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C1",
+        "expert_id": "e2",
+        "items": ["A1", "A2", "A3"],
+        "matrix": [
+          [1.0, 0.5, 4.0],
+          [2.0, 1.0, 5.0],
+          [0.25, 0.2, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C2",
+        "expert_id": "e1",
+        "items": ["A1", "A2", "A3"],
+        "matrix": [
+          [1.0, 4.0, 0.5],
+          [0.25, 1.0, 0.2],
+          [2.0, 5.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C2",
+        "expert_id": "e2",
+        "items": ["A1", "A2", "A3"],
+        "matrix": [
+          [1.0, 3.0, 7.0],
+          [0.3333, 1.0, 5.0],
+          [0.1429, 0.2, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C3",
+        "expert_id": "e1",
+        "items": ["A1", "A2", "A3"],
+        "matrix": [
+          [1.0, 0.25, 5.0],
+          [4.0, 1.0, 7.0],
+          [0.2, 0.1429, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C3",
+        "expert_id": "e2",
+        "items": ["A1", "A2", "A3"],
+        "matrix": [
+          [1.0, 2.0, 0.3333],
+          [0.5, 1.0, 0.25],
+          [3.0, 4.0, 1.0]
+        ]
+      }
+    ]
+  }
+}

@@ -4,9 +4,9 @@ import copy
 import math
 from typing import Dict, List, Optional, Tuple
 
-from .context import Context
-from .math import Math
-from .gcompi import GcompiCalculator
+from modules.context import Context
+from modules.math import Math
+from modules.gcompi import GcompiCalculator
 
 from entities import (
     GroupAhpModel,
@@ -32,9 +32,9 @@ class AemCom:
         self._gcompi = gcompi if gcompi is not None else GcompiCalculator()
 
         settings = self._context.group_model.settings.aem_com
-
         self._rho = permissibility if permissibility is not None else settings.permissibility
         self._max_iterations = max_iterations if max_iterations is not None else settings.max_iterations
+        self._initial_mode = getattr(settings, "initial_mode", "aij")
 
     def run_on_criteria_level(self) -> CriteriaLevelAemComResult:
         group_model = self._context.group_model
@@ -45,7 +45,11 @@ class AemCom:
 
         items = matrices[0].items
         A_family, alpha = self._extract_family(matrices)
-        P0 = self._build_aij_matrix(A_family, alpha)
+        P0 = self._build_initial_matrix(
+            matrices=A_family,
+            expert_weights=alpha,
+            items=items,
+        )
 
         run_result = self._run_aem_com(
             family_matrices=A_family,
@@ -73,7 +77,11 @@ class AemCom:
 
         items = matrices[0].items
         A_family, alpha = self._extract_family(matrices)
-        P0 = self._build_aij_matrix(A_family, alpha)
+        P0 = self._build_initial_matrix(
+            matrices=A_family,
+            expert_weights=alpha,
+            items=items,
+        )
 
         run_result = self._run_aem_com(
             family_matrices=A_family,
@@ -319,3 +327,28 @@ class AemCom:
             iterations=iterations,
             history=history,
         )
+
+    def _build_initial_matrix(
+        self,
+        matrices: List[List[List[float]]],
+        expert_weights: List[float],
+        items: List[str],
+    ) -> List[List[float]]:
+        mode = (self._initial_mode or "aij").lower()
+
+        if mode == "aij":
+            return self._build_aij_matrix(matrices, expert_weights)
+
+        n = len(items)
+
+        if mode == "first_expert":
+            if not matrices:
+                raise ValueError("Пустой список матриц при initial_mode='first_expert'.")
+
+            first = matrices[0]
+            return [row[:] for row in first]
+
+        if mode == "identity":
+            return [[1.0 for _ in range(n)] for _ in range(n)]
+
+        return self._build_aij_matrix(matrices, expert_weights)
