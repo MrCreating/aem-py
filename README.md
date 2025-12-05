@@ -1,0 +1,1 @@
+This is the AEM-COM project lib with test cases
