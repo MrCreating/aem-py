@@ -8,6 +8,7 @@ from entities.settings import Settings
 from entities.matrix import PairwiseMatrix
 from entities.matrices import PairwiseMatrices
 from entities.group_model import GroupAhpModel
+from entities.ahp_result import AhpResult
 
 __all__ = [
     "Problem",
@@ -20,4 +21,5 @@ __all__ = [
     "PairwiseMatrix",
     "PairwiseMatrices",
     "GroupAhpModel",
+    "AhpResult",
 ]
