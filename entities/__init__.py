@@ -9,6 +9,15 @@ from entities.matrix import PairwiseMatrix
 from entities.matrices import PairwiseMatrices
 from entities.group_model import GroupAhpModel
 from entities.ahp_result import AhpResult
+from entities.aem_com.iteration_record import AemComIterationRecord
+
+from .aem_com import (
+    AemComIterationRecord,
+    AemComRunResult,
+    CriteriaLevelAemComResult,
+    AlternativeLevelAemComResult,
+    AemComGlobalResult,
+)
 
 __all__ = [
     "Problem",
@@ -22,4 +31,10 @@ __all__ = [
     "PairwiseMatrices",
     "GroupAhpModel",
     "AhpResult",
+
+    "AemComIterationRecord",
+    "AemComRunResult",
+    "CriteriaLevelAemComResult",
+    "AlternativeLevelAemComResult",
+    "AemComGlobalResult",
 ]
