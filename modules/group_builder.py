@@ -37,7 +37,8 @@ class GroupBuilder:
             pairwise_matrices=pairwise_matrices,
         )
 
-    def _build_problem(self, problem_data: Dict[str, Any]) -> Problem:
+    @staticmethod
+    def _build_problem(problem_data: Dict[str, Any]) -> Problem:
         return Problem(
             id=problem_data.get("id", ""),
             name=problem_data.get("name", ""),
@@ -45,7 +46,8 @@ class GroupBuilder:
             goal=problem_data.get("goal", ""),
         )
 
-    def _build_experts(self, experts_data: List[Dict[str, Any]]) -> List[Expert]:
+    @staticmethod
+    def _build_experts(experts_data: List[Dict[str, Any]]) -> List[Expert]:
         experts: List[Expert] = []
         for e in experts_data:
             expert = Expert(
@@ -57,7 +59,8 @@ class GroupBuilder:
             experts.append(expert)
         return experts
 
-    def _build_ahp_model(self, model_data: Dict[str, Any]) -> Model:
+    @staticmethod
+    def _build_ahp_model(model_data: Dict[str, Any]) -> Model:
         criteria_data = model_data.get("criteria", [])
         alternatives_data = model_data.get("alternatives", [])
 
@@ -81,7 +84,8 @@ class GroupBuilder:
 
         return Model(criteria=criteria, alternatives=alternatives)
 
-    def _build_settings(self, settings_data: Dict[str, Any]) -> Settings:
+    @staticmethod
+    def _build_settings(settings_data: Dict[str, Any]) -> Settings:
         ahp_scale = settings_data.get("ahp_scale", "saaty_1_9")
         aem_com_data = settings_data.get("aem_com", {})
 
@@ -127,8 +131,8 @@ class GroupBuilder:
             alternative_level=alternative_level,
         )
 
+    @staticmethod
     def _build_pairwise_matrix(
-            self,
             items: List[str],
             matrix: List[List[float]],
             expert_id: str | None,
