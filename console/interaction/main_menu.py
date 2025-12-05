@@ -146,11 +146,13 @@ class MainMenu:
             print(f"  {alt.id:15s} ({alt.name}): {w:.4f}")
 
         if gm.pairwise_matrices.criteria_level:
-            print("\nМатрицы попарных сравнений КРИТЕРИЕВ по всем экспертам:")
+            print("\n" + "-" * 60)
+            print("МАТРИЦЫ ПОПАРНЫХ СРАВНЕНИЙ (AHP)")
+            print("-" * 60)
+
+            print("\n[КРИТЕРИИ — матрицы по экспертам]")
             for idx, m in enumerate(gm.pairwise_matrices.criteria_level, start=1):
-                title = (
-                    f"Матрица критериев (эксперт {m.expert_id}, #{idx})"
-                )
+                title = f"Эксперт {m.expert_id} (матрица #{idx})"
                 self._matrix_printer.print_matrix(
                     matrix=m.matrix,
                     row_labels=m.items,
@@ -159,15 +161,16 @@ class MainMenu:
                 )
                 print()
 
-            print("\nМатрицы попарных сравнений АЛЬТЕРНАТИВ (по критериям и экспертам):")
+            print("\n[АЛЬТЕРНАТИВЫ — по критериям и экспертам]")
             for idx, m in enumerate(gm.pairwise_matrices.alternative_level, start=1):
                 title = (
-                    f"Матрица альтернатив "
-                    f"(критерий={m.criterion_id}, эксперт={m.expert_id}, #{idx})"
+                    f"Критерий {m.criterion_id}, эксперт {m.expert_id} "
+                    f"(матрица #{idx})"
                 )
                 self._matrix_printer.print_matrix(
                     matrix=m.matrix,
                     row_labels=m.items,
+
                     col_labels=m.items,
                     title=title,
                 )
@@ -198,41 +201,60 @@ class MainMenu:
             f"суммарное число итераций: {global_result.total_iterations}"
         )
 
-        if global_result.criteria_result is not None:
-            crit_run = global_result.criteria_result.run
-            print("\n[УРОВЕНЬ КРИТЕРИЕВ]")
-            print(f"  GCOMPI initial: {crit_run.gcompi_initial:.6f}")
-            print(f"  GCOMPI min (A, w_G): {crit_run.gcompi_min:.6f}")
-            print(f"  GCOMPI final:  {crit_run.gcompi_final:.6f}")
-            print(f"  Iterations:    {crit_run.iterations}")
+        gm = context.group_model
 
-            print("\n  Начальная коллективная матрица P (до AEM-COM):")
+        if global_result.criteria_result is not None:
+            print("\n" + "-" * 60)
+            print("[AEM-COM] УРОВЕНЬ КРИТЕРИЕВ")
+            print("-" * 60)
+
+            crit_run = global_result.criteria_result.run
+
+            print(
+                f"GCOMPI: initial={crit_run.gcompi_initial:.6f}, "
+                f"final={crit_run.gcompi_final:.6f}, "
+                f"min(A, w_G)={crit_run.gcompi_min:.6f}"
+            )
+            print(f"Итераций: {crit_run.iterations}")
+
+            print("\nВекторы приоритетов (критерии):")
+            for item, v0, v_fin, w in zip(
+                crit_run.items,
+                crit_run.initial_priorities,
+                crit_run.final_priorities,
+                crit_run.group_priorities,
+            ):
+                print(
+                    f"  {item}: v0={v0:.4f}, v'={v_fin:.4f}, w_G={w:.4f}"
+                )
+
             self._matrix_printer.print_matrix(
                 matrix=crit_run.initial_matrix,
                 row_labels=crit_run.items,
                 col_labels=crit_run.items,
-                title="P0 (критерии)",
+                title="\nP0 (коллективная матрица критериев, до AEM-COM)",
             )
-
-            print("\n  Итоговая коллективная матрица P' (после AEM-COM):")
+            print()
             self._matrix_printer.print_matrix(
                 matrix=crit_run.final_matrix,
                 row_labels=crit_run.items,
                 col_labels=crit_run.items,
-                title="P' (критерии)",
+                title="\nP' (коллективная матрица критериев, после AEM-COM)",
             )
 
             if crit_run.history:
-                print("\n  Первые несколько итераций:")
+                print("\nПервые несколько итераций (критерии):")
                 for rec in crit_run.history[:5]:
                     print(
-                        f"    it={rec.iteration:2d}, pair={rec.pair_items}, "
+                        f"  it={rec.iteration:2d}, pair={rec.pair_items}, "
                         f"t={rec.t_rs:.4f}, old={rec.old_value:.4f}, "
                         f"new={rec.new_value:.4f}, GCOMPI={rec.gcompi_value:.6f}"
                     )
 
-        gm = context.group_model
-        print("\n[УРОВЕНЬ АЛЬТЕРНАТИВ ПО КРИТЕРИЯМ]")
+        print("\n" + "-" * 60)
+        print("[AEM-COM] УРОВЕНЬ АЛЬТЕРНАТИВ ПО КРИТЕРИЯМ")
+        print("-" * 60)
+
         for crit in gm.model.criteria:
             c_id = crit.id
             if c_id not in global_result.alternatives_results:
@@ -241,31 +263,43 @@ class MainMenu:
             alt_res = global_result.alternatives_results[c_id]
             run = alt_res.run
 
-            print(f"\n  Критерий {c_id} ({crit.name}):")
-            print(f"    GCOMPI initial: {run.gcompi_initial:.6f}")
-            print(f"    GCOMPI min (A, w_G): {run.gcompi_min:.6f}")
-            print(f"    GCOMPI final:  {run.gcompi_final:.6f}")
-            print(f"    Iterations:    {run.iterations}")
+            print(f"\nКритерий {c_id} ({crit.name}):")
+            print(
+                f"  GCOMPI: initial={run.gcompi_initial:.6f}, "
+                f"final={run.gcompi_final:.6f}, "
+                f"min(A, w_G)={run.gcompi_min:.6f}"
+            )
+            print(f"  Итераций: {run.iterations}")
 
-            print("    P0 (альтернативы):")
+            print("  Векторы приоритетов (альтернативы):")
+            for item, v0, v_fin, w in zip(
+                run.items,
+                run.initial_priorities,
+                run.final_priorities,
+                run.group_priorities,
+            ):
+                print(
+                    f"    {item}: v0={v0:.4f}, v'={v_fin:.4f}, w_G={w:.4f}"
+                )
+
             self._matrix_printer.print_matrix(
                 matrix=run.initial_matrix,
                 row_labels=run.items,
                 col_labels=run.items,
-                title=f"P0 для критерия {c_id}",
+                title=f"\nP0 (альтернативы, критерий {c_id})",
             )
-            print("    P' (альтернативы):")
+            print()
             self._matrix_printer.print_matrix(
                 matrix=run.final_matrix,
                 row_labels=run.items,
                 col_labels=run.items,
-                title=f"P' для критерия {c_id}",
+                title=f"\nP' (альтернативы, критерий {c_id})",
             )
 
             if run.history:
                 last = run.history[-1]
                 print(
-                    f"    Последняя итерация:"
+                    f"\n  Последняя итерация:"
                     f" it={last.iteration}, pair={last.pair_items},"
                     f" t={last.t_rs:.4f}, GCOMPI={last.gcompi_value:.6f}"
                 )
