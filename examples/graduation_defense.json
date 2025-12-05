@@ -1,0 +1,416 @@
+{
+  "problem": {
+    "id": "graduation_defense_2026",
+    "name": "Защита диплома",
+    "description": "Групповая AHP-модель для выбора лучшего дипломного проекта на защите.",
+    "goal": "Выбрать лучший дипломный проект"
+  },
+  "experts": [
+    {
+      "id": "exp1",
+      "name": "Председатель ГЭК",
+      "role": "Председатель комиссии",
+      "weight": 0.3
+    },
+    {
+      "id": "exp2",
+      "name": "Научный руководитель",
+      "role": "Научный руководитель диплома",
+      "weight": 0.3
+    },
+    {
+      "id": "exp3",
+      "name": "Рецензент",
+      "role": "Внешний рецензент",
+      "weight": 0.2
+    },
+    {
+      "id": "exp4",
+      "name": "Представитель работодателя",
+      "role": "Представитель индустрии",
+      "weight": 0.2
+    }
+  ],
+  "model": {
+    "criteria": [
+      {
+        "id": "crit_novelty",
+        "name": "Научная новизна",
+        "description": "Степень оригинальности и научного вклада работы"
+      },
+      {
+        "id": "crit_practical",
+        "name": "Практическая значимость",
+        "description": "Возможность реального внедрения и полезность для практики"
+      },
+      {
+        "id": "crit_implementation",
+        "name": "Качество реализации",
+        "description": "Качество программной/технической реализации, полнота прототипа"
+      },
+      {
+        "id": "crit_presentation",
+        "name": "Оформление и доклад",
+        "description": "Качество текста ВКР, презентации и устного выступления"
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "proj_dss",
+        "name": "Система поддержки решений для приёмной комиссии",
+        "description": "Веб-система для ранжирования абитуриентов"
+      },
+      {
+        "id": "proj_mobile",
+        "name": "Мобильное приложение мониторинга успеваемости",
+        "description": "Приложение для студентов и преподавателей"
+      },
+      {
+        "id": "proj_transport",
+        "name": "Аналитическая платформа транспортных потоков",
+        "description": "Big Data-проект по анализу нагрузок на транспорт"
+      },
+      {
+        "id": "proj_recommend",
+        "name": "Сервис рекомендаций учебных траекторий",
+        "description": "Рекомендательная система для выбора курсов"
+      }
+    ]
+  },
+  "settings": {
+    "ahp_scale": "saaty_1_9",
+    "aem_com": {
+      "permissibility": 0.15,
+      "apply_to": [
+        "criteria",
+        "alternatives_by_criterion"
+      ],
+      "max_iterations": 100
+    }
+  },
+  "pairwise_matrices": {
+    "criteria_level": [
+      {
+        "expert_id": "exp1",
+        "items": [
+          "crit_novelty",
+          "crit_practical",
+          "crit_implementation",
+          "crit_presentation"
+        ],
+        "matrix": [
+          [1.0, 2.0, 3.0, 4.0],
+          [0.5, 1.0, 2.0, 3.0],
+          [0.3333333, 0.5, 1.0, 2.0],
+          [0.25, 0.3333333, 0.5, 1.0]
+        ]
+      },
+      {
+        "expert_id": "exp2",
+        "items": [
+          "crit_novelty",
+          "crit_practical",
+          "crit_implementation",
+          "crit_presentation"
+        ],
+        "matrix": [
+          [1.0, 0.5, 2.0, 3.0],
+          [2.0, 1.0, 3.0, 4.0],
+          [0.5, 0.3333333, 1.0, 2.0],
+          [0.3333333, 0.25, 0.5, 1.0]
+        ]
+      },
+      {
+        "expert_id": "exp3",
+        "items": [
+          "crit_novelty",
+          "crit_practical",
+          "crit_implementation",
+          "crit_presentation"
+        ],
+        "matrix": [
+          [1.0, 1.0, 2.0, 2.0],
+          [1.0, 1.0, 2.0, 3.0],
+          [0.5, 0.5, 1.0, 2.0],
+          [0.5, 0.3333333, 0.5, 1.0]
+        ]
+      },
+      {
+        "expert_id": "exp4",
+        "items": [
+          "crit_novelty",
+          "crit_practical",
+          "crit_implementation",
+          "crit_presentation"
+        ],
+        "matrix": [
+          [1.0, 2.0, 2.0, 3.0],
+          [0.5, 1.0, 2.0, 2.0],
+          [0.5, 0.5, 1.0, 2.0],
+          [0.3333333, 0.5, 0.5, 1.0]
+        ]
+      }
+    ],
+    "alternative_level": [
+      {
+        "criterion_id": "crit_novelty",
+        "expert_id": "exp1",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 0.5, 0.3333333, 0.25],
+          [2.0, 1.0, 0.5, 0.3333333],
+          [3.0, 2.0, 1.0, 0.5],
+          [4.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_novelty",
+        "expert_id": "exp2",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 1.0, 0.5, 0.3333333],
+          [1.0, 1.0, 0.5, 0.3333333],
+          [2.0, 2.0, 1.0, 0.5],
+          [3.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_novelty",
+        "expert_id": "exp3",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.3333333, 0.5],
+          [0.5, 1.0, 0.25, 0.3333333],
+          [3.0, 4.0, 1.0, 2.0],
+          [2.0, 3.0, 0.5, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_novelty",
+        "expert_id": "exp4",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.5, 0.5],
+          [0.5, 1.0, 0.3333333, 0.3333333],
+          [2.0, 3.0, 1.0, 1.0],
+          [2.0, 3.0, 1.0, 1.0]
+        ]
+      },
+
+      {
+        "criterion_id": "crit_practical",
+        "expert_id": "exp1",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 0.5, 0.3333333, 0.25],
+          [2.0, 1.0, 0.5, 0.3333333],
+          [3.0, 2.0, 1.0, 0.5],
+          [4.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_practical",
+        "expert_id": "exp2",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 1.0, 0.5, 0.3333333],
+          [1.0, 1.0, 0.5, 0.3333333],
+          [2.0, 2.0, 1.0, 0.5],
+          [3.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_practical",
+        "expert_id": "exp3",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.3333333, 0.5],
+          [0.5, 1.0, 0.25, 0.3333333],
+          [3.0, 4.0, 1.0, 2.0],
+          [2.0, 3.0, 0.5, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_practical",
+        "expert_id": "exp4",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.5, 0.5],
+          [0.5, 1.0, 0.3333333, 0.3333333],
+          [2.0, 3.0, 1.0, 1.0],
+          [2.0, 3.0, 1.0, 1.0]
+        ]
+      },
+
+      {
+        "criterion_id": "crit_implementation",
+        "expert_id": "exp1",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 0.5, 0.3333333, 0.25],
+          [2.0, 1.0, 0.5, 0.3333333],
+          [3.0, 2.0, 1.0, 0.5],
+          [4.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_implementation",
+        "expert_id": "exp2",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 1.0, 0.5, 0.3333333],
+          [1.0, 1.0, 0.5, 0.3333333],
+          [2.0, 2.0, 1.0, 0.5],
+          [3.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_implementation",
+        "expert_id": "exp3",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.3333333, 0.5],
+          [0.5, 1.0, 0.25, 0.3333333],
+          [3.0, 4.0, 1.0, 2.0],
+          [2.0, 3.0, 0.5, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_implementation",
+        "expert_id": "exp4",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.5, 0.5],
+          [0.5, 1.0, 0.3333333, 0.3333333],
+          [2.0, 3.0, 1.0, 1.0],
+          [2.0, 3.0, 1.0, 1.0]
+        ]
+      },
+
+      {
+        "criterion_id": "crit_presentation",
+        "expert_id": "exp1",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 0.5, 0.3333333, 0.25],
+          [2.0, 1.0, 0.5, 0.3333333],
+          [3.0, 2.0, 1.0, 0.5],
+          [4.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_presentation",
+        "expert_id": "exp2",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 1.0, 0.5, 0.3333333],
+          [1.0, 1.0, 0.5, 0.3333333],
+          [2.0, 2.0, 1.0, 0.5],
+          [3.0, 3.0, 2.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_presentation",
+        "expert_id": "exp3",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.3333333, 0.5],
+          [0.5, 1.0, 0.25, 0.3333333],
+          [3.0, 4.0, 1.0, 2.0],
+          [2.0, 3.0, 0.5, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "crit_presentation",
+        "expert_id": "exp4",
+        "items": [
+          "proj_dss",
+          "proj_mobile",
+          "proj_transport",
+          "proj_recommend"
+        ],
+        "matrix": [
+          [1.0, 2.0, 0.5, 0.5],
+          [0.5, 1.0, 0.3333333, 0.3333333],
+          [2.0, 3.0, 1.0, 1.0],
+          [2.0, 3.0, 1.0, 1.0]
+        ]
+      }
+    ]
+  }
+}
