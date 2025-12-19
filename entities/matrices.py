@@ -9,3 +9,4 @@ from entities.matrix import PairwiseMatrix
 class PairwiseMatrices:
     criteria_level: List[PairwiseMatrix] = field(default_factory=list)
     alternative_level: List[PairwiseMatrix] = field(default_factory=list)
+    collective_level: List[PairwiseMatrix] = field(default_factory=list)

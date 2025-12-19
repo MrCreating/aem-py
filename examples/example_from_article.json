@@ -1,0 +1,91 @@
+{
+  "problem": {
+    "id": "aemcom_paper_case_rho_25",
+    "name": "AEM-COM (статья Aguarón et al., 2023) - числовой пример, rho=25%",
+    "description": "Входные данные из статьи (Sect. 5), эксперимент с permissibility ρ=0.25 (табл. 7)",
+    "goal": "Снизить несовместимость (GCOMPI), меняя только коллективную матрицу"
+  },
+  "experts": [
+    { "id": "e1", "name": "DM1", "role": "Decision Maker 1", "weight": 0.45454545454545453 },
+    { "id": "e2", "name": "DM2", "role": "Decision Maker 2", "weight": 0.36363636363636365 },
+    { "id": "e3", "name": "DM3", "role": "Decision Maker 3", "weight": 0.18181818181818182 }
+  ],
+  "model": {
+    "criteria": [
+      { "id": "C0", "name": "LocalCriterion", "description": "Локальный контекст" }
+    ],
+    "alternatives": [
+      { "id": "A1", "name": "Alternative 1", "description": "1" },
+      { "id": "A2", "name": "Alternative 2", "description": "2" },
+      { "id": "A3", "name": "Alternative 3", "description": "3" },
+      { "id": "A4", "name": "Alternative 4", "description": "4" },
+      { "id": "A5", "name": "Alternative 5", "description": "5" }
+    ]
+  },
+  "settings": {
+    "ahp_scale": "saaty_1_9",
+    "aem_com": {
+      "strict_decrease": true,
+      "permissibility": 0.25,
+      "apply_to": ["alternatives_by_criterion"],
+      "max_iterations": 100,
+      "initial_mode": "pccm"
+    }
+  },
+  "pairwise_matrices": {
+    "criteria_level": [
+      { "expert_id": "e1", "items": ["C0"], "matrix": [[1.0]] },
+      { "expert_id": "e2", "items": ["C0"], "matrix": [[1.0]] },
+      { "expert_id": "e3", "items": ["C0"], "matrix": [[1.0]] }
+    ],
+    "alternative_level": [
+      {
+        "criterion_id": "C0",
+        "expert_id": "e1",
+        "items": ["A1", "A2", "A3", "A4", "A5"],
+        "matrix": [
+          [1.0, 3.0, 5.0, 8.0, 6.0],
+          [0.3333333333333333, 1.0, 3.0, 5.0, 4.0],
+          [0.2, 0.3333333333333333, 1.0, 3.0, 2.0],
+          [0.125, 0.2, 0.3333333333333333, 1.0, 0.3333333333333333],
+          [0.16666666666666666, 0.25, 0.5, 3.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C0",
+        "expert_id": "e2",
+        "items": ["A1", "A2", "A3", "A4", "A5"],
+        "matrix": [
+          [1.0, 3.0, 7.0, 9.0, 5.0],
+          [0.3333333333333333, 1.0, 3.0, 7.0, 1.0],
+          [0.14285714285714285, 0.3333333333333333, 1.0, 5.0, 0.2],
+          [0.1111111111111111, 0.14285714285714285, 0.2, 1.0, 0.2],
+          [0.2, 1.0, 5.0, 5.0, 1.0]
+        ]
+      },
+      {
+        "criterion_id": "C0",
+        "expert_id": "e3",
+        "items": ["A1", "A2", "A3", "A4", "A5"],
+        "matrix": [
+          [1.0, 5.0, 7.0, 7.0, 5.0],
+          [0.2, 1.0, 5.0, 5.0, 1.0],
+          [0.14285714285714285, 0.2, 1.0, 5.0, 0.3333333333333333],
+          [0.14285714285714285, 0.2, 0.2, 1.0, 0.2],
+          [0.2, 1.0, 3.0, 5.0, 1.0]
+        ]
+      }
+    ],
+    "collective_matrix": {
+      "criterion_id": "C0",
+      "items": ["A1", "A2", "A3", "A4", "A5"],
+      "matrix": [
+        [1.0, 2.049, 5.510, 9.0, 3.165],
+        [0.487, 1.0, 3.0, 6.082, 1.739],
+        [0.181, 0.3333333333333333, 1.0, 2.709, 0.681662],
+        [0.1111111111111111, 0.164421, 0.369, 1.0, 0.3515],
+        [0.316, 0.575, 1.467, 2.845, 1.0]
+      ]
+    }
+  }
+}

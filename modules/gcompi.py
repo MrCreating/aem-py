@@ -1,16 +1,18 @@
 from __future__ import annotations
 
 import math
-from typing import Dict, List
+from typing import List
 
 
 class GcompiCalculator:
-    """
-    Вычисление геометрического индекса совместимости GCOMPI в локальном AHP-GDM контексте
-    """
-
     def __init__(self) -> None:
         pass
+
+    @staticmethod
+    def _log_sq(x: float) -> float:
+        """(ln x)^2, x > 0"""
+        ln = math.log(x)
+        return ln * ln
 
     @staticmethod
     def _gcompi_single(matrix: List[List[float]], u: List[float]) -> float:
@@ -24,13 +26,14 @@ class GcompiCalculator:
 
         total = 0.0
         for i in range(n):
+            ui = u[i]
+            if ui == 0.0:
+                continue
             for j in range(n):
-                value = matrix[i][j] * (u[j] / u[i])
+                value = matrix[i][j] * (u[j] / ui)
                 if value <= 0.0:
                     continue
-
-                log_val = math.log(value, 2.0)
-                total += log_val * log_val
+                total += GcompiCalculator._log_sq(value)
 
         return total / denom
 
@@ -63,12 +66,14 @@ class GcompiCalculator:
 
             inner = 0.0
             for i in range(n):
+                ui = u[i]
+                if ui == 0.0:
+                    continue
                 for j in range(n):
-                    value = matrix[i][j] * (u[j] / u[i])
+                    value = matrix[i][j] * (u[j] / ui)
                     if value <= 0.0:
                         continue
-                    log_val = math.log(value, 2.0)
-                    inner += log_val * log_val
+                    inner += GcompiCalculator._log_sq(value)
 
             total += alpha_k * inner
 

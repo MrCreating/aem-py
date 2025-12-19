@@ -108,6 +108,9 @@ class GroupBuilder:
         criteria_level_data = matrices_data.get("criteria_level", [])
         alternative_level_data = matrices_data.get("alternative_level", [])
 
+        collective_level_data = matrices_data.get("collective_level", None)
+        single_collective = matrices_data.get("collective_matrix", None)
+
         criteria_level: List[PairwiseMatrix] = []
         for m in criteria_level_data:
             matrix = self._build_pairwise_matrix(
@@ -128,9 +131,28 @@ class GroupBuilder:
             )
             alternative_level.append(matrix)
 
+        collective_level: List[PairwiseMatrix] = []
+
+        if isinstance(collective_level_data, list):
+            coll_list = collective_level_data
+        elif isinstance(single_collective, dict):
+            coll_list = [single_collective]
+        else:
+            coll_list = []
+
+        for m in coll_list:
+            matrix = self._build_pairwise_matrix(
+                items=m.get("items", []),
+                matrix=m.get("matrix", []),
+                expert_id=m.get("expert_id"),
+                criterion_id=m.get("criterion_id"),
+            )
+            collective_level.append(matrix)
+
         return PairwiseMatrices(
             criteria_level=criteria_level,
             alternative_level=alternative_level,
+            collective_level=collective_level,
         )
 
     @staticmethod

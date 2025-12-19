@@ -206,7 +206,7 @@ class Validator:
         alternative_ids = {a.id for a in group_model.model.alternatives}
         expert_ids = {e.id for e in group_model.experts}
 
-        for m in group_model.pairwise_matrices.criteria_level:
+        for m in getattr(group_model.pairwise_matrices, "criteria_level", []):
             checks.extend(self._check_single_matrix(
                 m,
                 allowed_items=criteria_ids,
@@ -216,7 +216,7 @@ class Validator:
                 level_name="criteria_level",
             ))
 
-        for m in group_model.pairwise_matrices.alternative_level:
+        for m in getattr(group_model.pairwise_matrices, "alternative_level", []):
             checks.extend(self._check_single_matrix(
                 m,
                 allowed_items=alternative_ids,
@@ -224,6 +224,17 @@ class Validator:
                 expect_criterion_id=True,
                 strict=strict,
                 level_name="alternative_level",
+            ))
+
+        for m in getattr(group_model.pairwise_matrices, "collective_level", []):
+            allowed = alternative_ids if m.criterion_id is not None else criteria_ids
+            checks.extend(self._check_single_matrix(
+                m,
+                allowed_items=allowed,
+                expert_ids=expert_ids,
+                expect_criterion_id=(m.criterion_id is not None),
+                strict=strict,
+                level_name="collective_level",
             ))
 
         return [(ok, msg) for ok, msg in checks if msg or not ok]
@@ -263,11 +274,12 @@ class Validator:
                 if len(row) != n else "",
             ))
 
-        checks.append((
-            matrix_obj.expert_id in expert_ids,
-            f"Матрица ({level_name}) с неизвестным expert_id={matrix_obj.expert_id}."
-            if matrix_obj.expert_id not in expert_ids else "",
-        ))
+        if matrix_obj.expert_id is not None:
+            checks.append((
+                matrix_obj.expert_id in expert_ids,
+                f"Матрица ({level_name}) с неизвестным expert_id={matrix_obj.expert_id}."
+                if matrix_obj.expert_id not in expert_ids else "",
+            ))
 
         if expect_criterion_id:
             checks.append((

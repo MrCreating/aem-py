@@ -18,6 +18,7 @@ from entities import (
     AemComGlobalResult,
 )
 
+
 class AemCom:
     def __init__(
         self,
@@ -47,10 +48,12 @@ class AemCom:
 
         items = matrices[0].items
         A_family, alpha = self._extract_family(matrices)
+        P_provided = self._get_provided_collective_matrix(criterion_id=None, items=items)
         P0 = self._build_initial_matrix(
             matrices=A_family,
             expert_weights=alpha,
             items=items,
+            provided_matrix=P_provided,
         )
 
         run_result = self._run_aem_com(
@@ -79,10 +82,12 @@ class AemCom:
 
         items = matrices[0].items
         A_family, alpha = self._extract_family(matrices)
+        P_provided = self._get_provided_collective_matrix(criterion_id=criterion_id, items=items)
         P0 = self._build_initial_matrix(
             matrices=A_family,
             expert_weights=alpha,
             items=items,
+            provided_matrix=P_provided,
         )
 
         run_result = self._run_aem_com(
@@ -144,6 +149,27 @@ class AemCom:
             alpha.append(max(w_k, 0.0))
 
         return family, alpha
+
+    def _get_provided_collective_matrix(
+            self,
+            criterion_id: Optional[str],
+            items: List[str],
+    ) -> Optional[List[List[float]]]:
+        group_model = self._context.group_model
+        candidates = getattr(group_model.pairwise_matrices, "collective_level", [])
+        for pm in candidates:
+            if pm.criterion_id != criterion_id:
+                continue
+            if list(pm.items) != list(items):
+                continue
+            if not pm.matrix:
+                continue
+            if len(pm.matrix) != len(items):
+                continue
+            if any(len(row) != len(items) for row in pm.matrix):
+                continue
+            return pm.matrix
+        return None
 
     @staticmethod
     def _build_aij_matrix(matrices: List[List[List[float]]], expert_weights: List[float]) -> List[List[float]]:
@@ -304,7 +330,7 @@ class AemCom:
             if self._strict_decrease and gcompi_new >= gcompi_current:
                 P[r][s] = old_val
                 P[s][r] = 1.0 / old_val
-                break
+                continue
 
             iterations += 1
             v = v_new
@@ -342,8 +368,16 @@ class AemCom:
         matrices: List[List[List[float]]],
         expert_weights: List[float],
         items: List[str],
+        provided_matrix: Optional[List[List[float]]] = None,
     ) -> List[List[float]]:
         mode = (self._initial_mode or "aij").lower()
+
+        if mode in {"provided_collective_matrix", "provided", "pccm", "collective"}:
+            if provided_matrix is None:
+                raise ValueError(
+                    "initial_mode запрошен как 'provided_collective_matrix', но в JSON не передана соответствующая матрица (pairwise_matrices.collective_matrix/collective_level)."
+                )
+            return [row[:] for row in provided_matrix]
 
         if mode == "aij":
             return self._build_aij_matrix(matrices, expert_weights)
