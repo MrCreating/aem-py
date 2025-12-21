@@ -26,7 +26,7 @@
     "ahp_scale": "saaty_1_9",
     "aem_com": {
       "strict_decrease": true,
-      "permissibility": 0.25,
+      "permissibility": 0.50,
       "apply_to": ["alternatives_by_criterion"],
       "max_iterations": 100,
       "initial_mode": "pccm"
