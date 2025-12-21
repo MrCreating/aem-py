@@ -126,12 +126,15 @@ class AemCom:
                 total_iterations += alt_result.run.iterations
                 levels_count += 1
 
-        return AemComGlobalResult(
+        global_result = AemComGlobalResult(
             criteria_result=criteria_result,
             alternatives_results=alternatives_results,
             total_iterations=total_iterations,
             levels_count=levels_count,
         )
+
+        self._context.aem_com_result = global_result
+        return global_result
 
     def _extract_family(
             self,

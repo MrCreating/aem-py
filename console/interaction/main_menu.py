@@ -6,11 +6,19 @@ from modules import Context, AHP, AemCom
 from utils import Validator
 from console.utils import MatrixPrinter
 
+import os
 
 class MainMenu:
     def __init__(self) -> None:
         self._context: Optional[Context] = None
         self._matrix_printer = MatrixPrinter(float_format=".4f", padding=1)
+
+    @staticmethod
+    def _safe_input(prompt: str) -> Optional[str]:
+        try:
+            return input(prompt)
+        except KeyboardInterrupt:
+            return "0"
 
     def run(self) -> None:
         while True:
@@ -18,10 +26,10 @@ class MainMenu:
             self._print_status()
             self._print_menu()
 
-            choice = input("Ваш выбор: ").strip()
+            choice = self._safe_input("Ваш выбор: ")
 
             if choice == "0":
-                print("Выход из программы.")
+                print("Выход из программы")
                 return
             elif choice == "1":
                 self._action_select_context()
@@ -70,18 +78,28 @@ class MainMenu:
             self._wait_for_enter()
             return
 
+        self.load_context_from_file(path, wait_after=True)
+
+    def load_context_from_file(self, path: str, *, output_path: Optional[str], wait_after: bool = False) -> bool:
         try:
-            context = Context.from_json_file(path)
+            context = Context.from_json_file(path, result_save_path=output_path)
         except Exception as e:
             print(f"Ошибка при загрузке контекста: {e}")
-            self._wait_for_enter()
-            return
+            if wait_after:
+                self._wait_for_enter()
+            return False
 
         self._context = context
         gm = context.group_model
-        print(f"Контекст успешно загружен: {gm.problem.id} — {gm.problem.name}")
+        print(f"Контекст был загружен из файла {os.path.basename(path)}")
+        print(f"Контекст: {gm.problem.id} — {gm.problem.name}")
         print(f"Цель: {gm.problem.goal}")
-        self._wait_for_enter()
+        if context.result_save_path:
+            print(f"Сохранение результатов будет выполнено в файл: {context.result_save_path}")
+
+        if wait_after:
+            self._wait_for_enter()
+        return True
 
     def _action_close_context(self) -> None:
         if self._context is None:
@@ -303,6 +321,13 @@ class MainMenu:
                     f" it={last.iteration}, pair={last.pair_items},"
                     f" t={last.t_rs:.4f}, GCOMPI={last.gcompi_value:.6f}"
                 )
+
+        if context.result_save_path:
+            try:
+                saved_to = context.save_result_json()
+                print(f"\nРезультат сохранён в: {saved_to}")
+            except Exception as e:
+                print(f"\nОшибка авто-сохранения результата: {e}")
 
         self._wait_for_enter()
 
