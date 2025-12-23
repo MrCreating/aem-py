@@ -4,6 +4,8 @@ gen = (
     PairwiseMatrixGenerator()
     .set_seed(42)
     .set_n(5)
+    .set_target_cr(0.25)
+    .set_round_digits(3)
 )
 
 A = gen.generate_pairwise(PairwiseMatrixGenerator.MODE_CONSISTENT)

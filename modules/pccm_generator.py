@@ -133,13 +133,13 @@ class PairwiseMatrixGenerator:
             (см комменты к константам)
         """
         if kind == self.MODE_CONSISTENT:
-            return self._generate_consistent()
+            return self._finalize_matrix(self._generate_consistent())
 
         if kind == self.MODE_INCONSISTENT:
-            return self._generate_inconsistent()
+            return self._finalize_matrix(self._generate_inconsistent())
 
         if kind == self.MODE_RANDOM_SAATY:
-            return self._generate_random()
+            return self._finalize_matrix(self._generate_random())
 
         raise ValueError(
             f"Неизвестный режим генерации: {kind}. "
@@ -244,7 +244,8 @@ class PairwiseMatrixGenerator:
     def _round(x: float, digits: Optional[int]) -> float:
         if digits is None:
             return x
-        return round(x, digits)
+        factor = 10 ** digits
+        return math.trunc(x * factor) / factor
 
 
     # САМА ГЕНЕРАЦИЯ
@@ -257,7 +258,7 @@ class PairwiseMatrixGenerator:
                     x = self._clip(x)
                 if self._quantize_flag:
                     x = self._quantize(x)
-                out[i][j] = self._round(x, self._round_digits)
+                out[i][j] = x
         self._enforce_reciprocal(out)
         return out
 
@@ -267,7 +268,7 @@ class PairwiseMatrixGenerator:
         a = self._zeros(self._n)
         for i in range(self._n):
             for j in range(self._n):
-                a[i][j] = self._round(w[i] / w[j], self._round_digits)
+                a[i][j] = w[i] / w[j]
         self._enforce_reciprocal(a)
         return a
 
@@ -277,7 +278,6 @@ class PairwiseMatrixGenerator:
             for j in range(i + 1, self._n):
                 val = self._rng.choice(self._SAATY_SCALE)
                 a[i][j] = val if self._rng.random() < 0.5 else 1 / val
-                a[i][j] = self._round(a[i][j], self._round_digits)
         self._enforce_reciprocal(a)
         return a
 
@@ -301,3 +301,17 @@ class PairwiseMatrixGenerator:
             else:
                 hi = mid
         return best
+
+    def _finalize_matrix(self, a: List[List[float]]) -> List[List[float]]:
+        if self._round_digits is None:
+            return a
+
+        out = self._copy(a)
+        self._enforce_reciprocal(out)
+
+        for i in range(self._n):
+            for j in range(self._n):
+                if i != j:
+                    out[i][j] = self._round(out[i][j], self._round_digits)
+
+        return out
