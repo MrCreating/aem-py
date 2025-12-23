@@ -121,7 +121,7 @@ def run_one(context_path: Path, out_dir: Path, i: Number, all_files: Number) -> 
 
 def main() -> int:
     if not MAIN.exists():
-        print(f"ERROR: не найден {MAIN}. Запускай скрипт из корня проекта.")
+        print(f"ERROR: не найден {MAIN}.")
         return 2
 
     if not CONTEXTS_DIR.exists():
