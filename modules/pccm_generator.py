@@ -35,6 +35,24 @@ class PairwiseMatrixGenerator:
         self._target_cr: Optional[float] = None
         self._quantize_flag = False
         self._clip_flag = True
+        self._round_digits: Optional[int] = None
+
+    def set_round_digits(self, digits: Optional[int]):
+        """
+            Ограничивает количество знаков после запятой у элементов МПС
+
+            Используется для повышения читаемости матриц и
+            упрощения последующего анализа результатов
+
+            Параметры:
+                digits (int | None): число знаков после запятой
+                    Если None, округление не применяется
+        """
+        if digits is not None and digits < 0:
+            raise ValueError("digits must be >= 0 or None")
+
+        self._round_digits = digits
+        return self
 
     def set_seed(self, seed: Optional[int]):
         """
@@ -222,6 +240,12 @@ class PairwiseMatrixGenerator:
         candidates = list(scale) + [1 / s for s in scale]
         return min(candidates, key=lambda c: abs(math.log(x) - math.log(c)))
 
+    @staticmethod
+    def _round(x: float, digits: Optional[int]) -> float:
+        if digits is None:
+            return x
+        return round(x, digits)
+
 
     # САМА ГЕНЕРАЦИЯ
     def _apply_noise(self, a: List[List[float]], sigma: float) -> List[List[float]]:
@@ -233,7 +257,7 @@ class PairwiseMatrixGenerator:
                     x = self._clip(x)
                 if self._quantize_flag:
                     x = self._quantize(x)
-                out[i][j] = x
+                out[i][j] = self._round(x, self._round_digits)
         self._enforce_reciprocal(out)
         return out
 
@@ -243,7 +267,7 @@ class PairwiseMatrixGenerator:
         a = self._zeros(self._n)
         for i in range(self._n):
             for j in range(self._n):
-                a[i][j] = w[i] / w[j]
+                a[i][j] = self._round(w[i] / w[j], self._round_digits)
         self._enforce_reciprocal(a)
         return a
 
@@ -253,6 +277,7 @@ class PairwiseMatrixGenerator:
             for j in range(i + 1, self._n):
                 val = self._rng.choice(self._SAATY_SCALE)
                 a[i][j] = val if self._rng.random() < 0.5 else 1 / val
+                a[i][j] = self._round(a[i][j], self._round_digits)
         self._enforce_reciprocal(a)
         return a
 
