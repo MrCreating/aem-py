@@ -122,7 +122,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.file:
         menu.load_context_from_file(args.file, output_path=args.output, wait_after=False)
 
-    menu.run()
+    menu.run(args)
     return 0
 
 

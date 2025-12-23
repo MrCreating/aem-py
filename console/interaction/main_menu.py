@@ -20,7 +20,7 @@ class MainMenu:
         except KeyboardInterrupt:
             return "0"
 
-    def run(self) -> None:
+    def run(self, args = None) -> None:
         while True:
             self._print_header()
             self._print_status()
@@ -32,7 +32,7 @@ class MainMenu:
                 print("Выход из программы")
                 return
             elif choice == "1":
-                self._action_select_context()
+                self._action_select_context(args)
             elif choice == "2":
                 self._action_close_context()
             elif choice == "3":
@@ -71,14 +71,14 @@ class MainMenu:
     def _wait_for_enter() -> None:
         input("\nНажмите Enter, чтобы продолжить...")
 
-    def _action_select_context(self) -> None:
+    def _action_select_context(self, args) -> None:
         path = input("Введите путь к JSON-файлу с задачей AHP: ").strip()
         if not path:
             print("Путь не указан, операция отменена.")
             self._wait_for_enter()
             return
 
-        self.load_context_from_file(path, wait_after=True)
+        self.load_context_from_file(path, wait_after=True, output_path=args.output)
 
     def load_context_from_file(self, path: str, *, output_path: Optional[str], wait_after: bool = False) -> bool:
         try:
@@ -95,7 +95,7 @@ class MainMenu:
         print(f"Контекст: {gm.problem.id} — {gm.problem.name}")
         print(f"Цель: {gm.problem.goal}")
         if context.result_save_path:
-            print(f"Сохранение результатов будет выполнено в файл: {context.result_save_path}")
+            print(f"Сохранение результатов будет выполнено в папку: {context.result_save_path}")
 
         if wait_after:
             self._wait_for_enter()
