@@ -1,5 +1,7 @@
 from modules import PairwiseMatrixGenerator
 
+# Тест несогласованной матрицы (проверка, что работает - не более)
+
 gen = (
     PairwiseMatrixGenerator()
     .set_seed(42)
