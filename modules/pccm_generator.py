@@ -253,11 +253,19 @@ class PairwiseMatrixGenerator:
         out = self._copy(a)
         for i in range(self._n):
             for j in range(i + 1, self._n):
-                x = out[i][j] * math.exp(self._rng.gauss(0, sigma))
+                z = self._rng.gauss(0, sigma)
+                if z > 50.0:
+                    z = 50.0
+                elif z < -50.0:
+                    z = -50.0
+
+                x = out[i][j] * math.exp(z)
+
                 if self._clip_flag:
                     x = self._clip(x)
                 if self._quantize_flag:
                     x = self._quantize(x)
+
                 out[i][j] = x
         self._enforce_reciprocal(out)
         return out
