@@ -1,0 +1,307 @@
+{
+  "problem": {
+    "id": "auto_0_05_nonsense_20251224_010713",
+    "name": "AEM-COM auto context (p=0.05, kind=nonsense)",
+    "description": "Auto-generated context: p=0.05, kind=nonsense, seed=42",
+    "goal": "Снизить несовместимость (GCOMPI), меняя только коллективную матрицу"
+  },
+  "experts": [
+    {
+      "id": "e1",
+      "name": "DM1",
+      "role": "Decision Maker 1",
+      "weight": 0.3333333333333333
+    },
+    {
+      "id": "e2",
+      "name": "DM2",
+      "role": "Decision Maker 2",
+      "weight": 0.3333333333333333
+    },
+    {
+      "id": "e3",
+      "name": "DM3",
+      "role": "Decision Maker 3",
+      "weight": 0.3333333333333333
+    }
+  ],
+  "model": {
+    "criteria": [
+      {
+        "id": "C0",
+        "name": "Criterion 0",
+        "description": "synthetic criterion 0"
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "A1",
+        "name": "Alternative 1",
+        "description": "1"
+      },
+      {
+        "id": "A2",
+        "name": "Alternative 2",
+        "description": "2"
+      },
+      {
+        "id": "A3",
+        "name": "Alternative 3",
+        "description": "3"
+      },
+      {
+        "id": "A4",
+        "name": "Alternative 4",
+        "description": "4"
+      },
+      {
+        "id": "A5",
+        "name": "Alternative 5",
+        "description": "5"
+      }
+    ]
+  },
+  "settings": {
+    "ahp_scale": "saaty_1_9",
+    "aem_com": {
+      "strict_decrease": false,
+      "permissibility": 0.05,
+      "apply_to": [
+        "alternatives_by_criterion"
+      ],
+      "max_iterations": 100,
+      "initial_mode": "pccm"
+    }
+  },
+  "pairwise_matrices": {
+    "criteria_level": [
+      {
+        "expert_id": "e1",
+        "items": [
+          "C0"
+        ],
+        "matrix": [
+          [
+            1.0
+          ]
+        ]
+      },
+      {
+        "expert_id": "e2",
+        "items": [
+          "C0"
+        ],
+        "matrix": [
+          [
+            1.0
+          ]
+        ]
+      },
+      {
+        "expert_id": "e3",
+        "items": [
+          "C0"
+        ],
+        "matrix": [
+          [
+            1.0
+          ]
+        ]
+      }
+    ],
+    "alternative_level": [
+      {
+        "criterion_id": "C0",
+        "expert_id": "e1",
+        "items": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5"
+        ],
+        "matrix": [
+          [
+            1.0,
+            1.996,
+            0.508,
+            3.801,
+            8.255
+          ],
+          [
+            0.5,
+            1.0,
+            9.0,
+            9.0,
+            0.22
+          ],
+          [
+            1.965,
+            0.111,
+            1.0,
+            4.579,
+            0.906
+          ],
+          [
+            0.263,
+            0.111,
+            0.218,
+            1.0,
+            0.435
+          ],
+          [
+            0.121,
+            4.534,
+            1.103,
+            2.296,
+            1.0
+          ]
+        ]
+      },
+      {
+        "criterion_id": "C0",
+        "expert_id": "e2",
+        "items": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5"
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.111,
+            1.626,
+            0.111,
+            0.111
+          ],
+          [
+            9.0,
+            1.0,
+            9.0,
+            0.412,
+            9.0
+          ],
+          [
+            0.614,
+            0.111,
+            1.0,
+            0.111,
+            0.111
+          ],
+          [
+            9.0,
+            2.426,
+            9.0,
+            1.0,
+            0.111
+          ],
+          [
+            9.0,
+            0.111,
+            9.0,
+            9.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "criterion_id": "C0",
+        "expert_id": "e3",
+        "items": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5"
+        ],
+        "matrix": [
+          [
+            1.0,
+            9.0,
+            0.13,
+            9.0,
+            9.0
+          ],
+          [
+            0.111,
+            1.0,
+            2.337,
+            9.0,
+            9.0
+          ],
+          [
+            7.67,
+            0.427,
+            1.0,
+            9.0,
+            9.0
+          ],
+          [
+            0.111,
+            0.111,
+            0.111,
+            1.0,
+            9.0
+          ],
+          [
+            0.111,
+            0.111,
+            0.111,
+            0.111,
+            1.0
+          ]
+        ]
+      }
+    ],
+    "collective_matrix": {
+      "criterion_id": "C0",
+      "method": "PCCM",
+      "items": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ],
+      "matrix": [
+        [
+          1.0,
+          0.794,
+          9.0,
+          0.111,
+          4.376
+        ],
+        [
+          1.259,
+          1.0,
+          0.123,
+          0.321,
+          0.111
+        ],
+        [
+          0.111,
+          8.079,
+          1.0,
+          0.111,
+          0.623
+        ],
+        [
+          9.0,
+          3.107,
+          9.0,
+          1.0,
+          9.0
+        ],
+        [
+          0.228,
+          9.0,
+          1.603,
+          0.111,
+          1.0
+        ]
+      ]
+    }
+  }
+}
