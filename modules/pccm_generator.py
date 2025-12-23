@@ -283,7 +283,7 @@ class PairwiseMatrixGenerator:
 
     def _generate_inconsistent(self) -> List[List[float]]:
         base = self._generate_consistent()
-        if self._target_cr is None:
+        if self._target_cr is None or self._target_cr <= 0:
             return self._apply_noise(base, self._sigma)
 
         target = self._target_cr

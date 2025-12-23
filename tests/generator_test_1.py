@@ -5,8 +5,8 @@ from modules import PairwiseMatrixGenerator
 gen = (
     PairwiseMatrixGenerator()
     .set_seed(42)
-    .set_n(5)
     .set_target_cr(0)
+    .set_n(5)
     .set_round_digits(3)
 )
 
