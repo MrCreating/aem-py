@@ -286,17 +286,34 @@ class PairwiseMatrixGenerator:
         if self._target_cr is None:
             return self._apply_noise(base, self._sigma)
 
-        lo, hi = 0.0, 2.5
+        target = self._target_cr
+
+        lo, hi = 0.0, 0.2
         best = base
-        for _ in range(20):
-            mid = (lo + hi) / 2
+        for _ in range(30):
+            self.set_seed(self._seed)
+            cand = self._apply_noise(base, hi)
+            cr_hi = self.consistency_ratio(cand)
+            best = cand
+            if cr_hi >= target:
+                break
+            hi *= 2.0
+
+        self.set_seed(self._seed)
+        cand = self._apply_noise(base, hi)
+        cr_hi = self.consistency_ratio(cand)
+        if cr_hi < target:
+            return best
+
+        for _ in range(60):
+            mid = (lo + hi) / 2.0
             self.set_seed(self._seed)
             cand = self._apply_noise(base, mid)
             cr = self.consistency_ratio(cand)
             best = cand
-            if abs(cr - self._target_cr) < 0.03:
+            if abs(cr - target) < 0.01:
                 break
-            if cr < self._target_cr:
+            if cr < target:
                 lo = mid
             else:
                 hi = mid
