@@ -253,13 +253,15 @@ class ContextGenerator:
         items = [a["id"] for a in alternatives]
 
         if self._collective_mode == self.COLLECTIVE_PCCM:
-            return {"method": "PCCM", "items": items, "matrix": [[1.0 if i == j else 1.0 for j in range(len(items))] for i in range(len(items))]}
+            gen = self._new_mps_generator(seed_offset=9000, n=len(items))
+            a = self._generate_matrix(gen)
+            return {"criterion_id": criteria[0]["id"], "method": "PCCM", "items": items, "matrix": a}
 
         if self._collective_mode == self.COLLECTIVE_RANDOM_SAATY:
             gen = self._new_mps_generator(seed_offset=9000, n=len(items))
             gen.quantize_to_saaty(True)
             a = gen.generate_pairwise(PairwiseMatrixGenerator.MODE_RANDOM_SAATY)
-            return {"method": "RANDOM_SAATY", "items": items, "matrix": a}
+            return {"criterion_id": criteria[0]["id"], "method": "RANDOM_SAATY", "items": items, "matrix": a}
 
         if self._collective_mode == self.COLLECTIVE_FROM_EXPERT:
             idx = max(0, min(len(experts) - 1, self._collective_from_expert_index))
@@ -268,7 +270,7 @@ class ContextGenerator:
             c_id = criteria[0]["id"]
             for row in alternative_level:
                 if row["criterion_id"] == c_id and row["expert_id"] == expert_id:
-                    return {"method": "FROM_EXPERT", "items": items, "matrix": row["matrix"]}
+                    return {"criterion_id": c_id, "method": "FROM_EXPERT", "items": items, "matrix": row["matrix"]}
             return None
 
         return None

@@ -60,7 +60,7 @@ def _build_ctx(
             initial_mode="pccm",
             apply_to=["alternatives_by_criterion"],
         )
-        .set_collective_mode(ContextGenerator.COLLECTIVE_NONE)
+        .set_collective_mode(ContextGenerator.COLLECTIVE_PCCM)
     )
 
     kwargs = dict(
@@ -77,7 +77,7 @@ def _build_ctx(
 
     g.set_matrix_generation(**kwargs)
 
-    return g.build(include_collective_matrix=False)
+    return g.build(include_collective_matrix=True)
 
 def main() -> int:
     stamp = _stamp()

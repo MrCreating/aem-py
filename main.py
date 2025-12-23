@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional, Sequence
 
 from console.interaction import MainMenu
 from modules import Context, AemCom
-from utils.result_builder import build_result_block
 
 
 def _expand_short_bundles(argv: Sequence[str]) -> List[str]:
